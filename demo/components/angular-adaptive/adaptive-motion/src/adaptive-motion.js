@@ -171,11 +171,73 @@ function test(){
       y: totaly/totald,
       d: totald
     };
-    // handledown()
+    handleGesture();
   }
   // console.log(totald)
   last=draw;
   c_.putImageData(delt,0,0);
+}
+
+var movethresh = 2;
+var brightthresh = 300;
+var overthresh = 1000;
+
+function calibrate(){
+  wasdown = {
+    x:down.x,
+    y:down.y,
+    d:down.d
+  };
+}
+
+var avg = 0;
+var state = 0; //States: 0 waiting for gesture, 1 waiting for next move after gesture, 2 waiting for gesture to end
+
+function handleGesture(){
+  avg= 0.9 * avg + 0.1 * down.d;
+  var davg=down.d - avg, good = davg>brightthresh;
+  //console.log(davg)
+  switch (state){
+    case 0:
+      if (good){ //Found a gesture, waiting for next move
+        state=1;
+        calibrate();
+      }
+      break;
+    case 2: //Wait for gesture to end
+      if (!good){ //Gesture ended
+        state=0;
+      }
+      break;
+    case 1: //Got next move, do something based on direction
+      var dx=down.x-wasdown.x,dy=down.y-wasdown.y;
+      var dirx=Math.abs(dy)<Math.abs(dx); //(dx,dy) is on a bowtie
+      //console.log(good,davg)
+      if (dx<-movethresh&&dirx){
+        console.log('right');
+      }
+      else if (dx>movethresh&&dirx){
+        console.log('left');
+      }
+      if (dy>movethresh&&!dirx){
+        if (davg>overthresh){
+          console.log('over up');
+        }
+        else{
+          console.log('up');
+        }
+      }
+      else if (dy<-movethresh&&!dirx){
+        if (davg>overthresh){
+          console.log('over down');
+        }
+        else{
+          console.log('down');
+        }
+      }
+      state=2;
+      break;
+  }
 }
 
 
