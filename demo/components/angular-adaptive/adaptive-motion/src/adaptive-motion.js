@@ -10,6 +10,34 @@ var adaptive = angular.module('adaptive.motion', []);
 
 adaptive.provider('$motion', [function() {
 
+  (function() {
+    var lastTime = 0;
+    var vendors = ['webkit', 'moz'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame =
+          window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+    }
+
+    if (!window.cancelAnimationFrame) {
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+    }
+  }());
+
+  var requestId;
   var video = document.getElementById('video');
   var canvas = document.getElementById('canvas');
   var _ = canvas.getContext('2d');
@@ -29,7 +57,7 @@ adaptive.provider('$motion', [function() {
       var s = stream;
       video.src = window.webkitURL.createObjectURL(stream);
       video.addEventListener('play', function() {
-        setInterval(dump, 1000/25);
+        requestId = window.requestAnimationFrame(dump);
       });
     },function(){
       console.log('OOOOOOOH! DEEEEENIED!');
@@ -48,6 +76,8 @@ adaptive.provider('$motion', [function() {
     // c_.putImageData(draw,0,0);
     skinfilter();
     test();
+
+    requestId = window.requestAnimationFrame(dump);
   }
 
 var huemin=0.0;
@@ -68,7 +98,7 @@ function skinfilter(){
   {
     for (var x=0 ; x<width ; x++)
     {
-      index_value = x+y*width
+      index_value = x+y*width;
       var r = draw.data[count_data_big_array];
       var g = draw.data[count_data_big_array+1];
       var b = draw.data[count_data_big_array+2];
@@ -138,7 +168,7 @@ function test(){
 
   if(last !== false){
 
-    while(pix-=4){
+    while(pix-=4) {
       var d=Math.abs(
         draw.data[pix]-last.data[pix]
       )+Math.abs(
@@ -214,10 +244,10 @@ function handleGesture(){
       var dirx=Math.abs(dy)<Math.abs(dx); //(dx,dy) is on a bowtie
       //console.log(good,davg)
       if (dx<-movethresh&&dirx){
-        console.log('right');
+        console.log('from right to left');
       }
       else if (dx>movethresh&&dirx){
-        console.log('left');
+        console.log('from left to right');
       }
       if (dy>movethresh&&!dirx){
         if (davg>overthresh){
