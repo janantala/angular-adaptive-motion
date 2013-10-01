@@ -47,7 +47,7 @@ adaptive.provider('$motion', [function() {
     draw = _.getImageData(0,0,width,height);
     // c_.putImageData(draw,0,0);
     skinfilter();
-    // test();
+    test();
   }
 
 var huemin=0.0;
@@ -94,7 +94,7 @@ function skinfilter(){
     }
   }
   draw=skin_filter;
-  c_.putImageData(draw,0,0);
+  // c_.putImageData(draw,0,0);
 }
 
 function rgb2Hsv(r, g, b){
@@ -134,8 +134,9 @@ var wasdown = false;
 
 function test(){
   var delt = _.createImageData(width,height);
+  var totalx=0,totaly=0,totald=0,totaln=delt.width*delt.height,dscl=0,pix=totaln*4;
+
   if(last !== false){
-    var totalx=0,totaly=0,totald=0,totaln=delt.width*delt.height,dscl=0,pix=totaln*4;
 
     while(pix-=4){
       var d=Math.abs(
@@ -149,9 +150,9 @@ function test(){
       if(d>thresh){
         delt.data[pix]=160;
         delt.data[pix+1]=255;
-          delt.data[pix+2]=
+        delt.data[pix+2]=255;
         delt.data[pix+3]=255;
-        totald+=1
+        totald+=1;
         totalx+=((pix/4)%width);
         totaly+=(Math.floor((pix/4)/delt.height));
       }
@@ -163,14 +164,13 @@ function test(){
       }
     }
   }
-  //slide.setAttribute('style','display:initial')
-  //slide.value=(totalx/totald)/width
+
   if (totald){
     down={
       x: totalx/totald,
       y: totaly/totald,
       d: totald
-    }
+    };
     // handledown()
   }
   // console.log(totald)
