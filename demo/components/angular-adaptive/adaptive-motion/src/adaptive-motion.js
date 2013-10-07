@@ -5,37 +5,39 @@
  */
 
 (function () {
+'use strict';
 
 var adaptive = angular.module('adaptive.motion', []);
 
+// RequestAnimationFrame fallback
+(function() {
+  var lastTime = 0;
+  var vendors = ['webkit', 'moz'];
+  for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+      window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+      window.cancelAnimationFrame =
+        window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
+  }
+
+  if (!window.requestAnimationFrame) {
+      window.requestAnimationFrame = function(callback, element) {
+          var currTime = new Date().getTime();
+          var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+          var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+            timeToCall);
+          lastTime = currTime + timeToCall;
+          return id;
+      };
+  }
+
+  if (!window.cancelAnimationFrame) {
+      window.cancelAnimationFrame = function(id) {
+          clearTimeout(id);
+      };
+  }
+}());
+
 adaptive.provider('$motion', [function() {
-
-  (function() {
-    var lastTime = 0;
-    var vendors = ['webkit', 'moz'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame =
-          window[vendors[x]+'CancelAnimationFrame'] || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
-
-    if (!window.requestAnimationFrame) {
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
-    }
-
-    if (!window.cancelAnimationFrame) {
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-    }
-  }());
 
   var requestId;
   var video = document.getElementById('video');
@@ -89,14 +91,14 @@ var valmax=1.0;
 
 function skinfilter(){
 
-  skin_filter=_.getImageData(0,0,width,height);
-  var total_pixels=skin_filter.width*skin_filter.height;
-  var index_value=total_pixels*4;
+  var skin_filter = _.getImageData(0,0,width,height);
+  var total_pixels = skin_filter.width*skin_filter.height;
+  var index_value = total_pixels*4;
 
-  var count_data_big_array=0;
-  for (var y=0 ; y<height ; y++)
+  var count_data_big_array = 0;
+  for (var y=0; y<height; y++)
   {
-    for (var x=0 ; x<width ; x++)
+    for (var x=0; x<width; x++)
     {
       index_value = x+y*width;
       var r = draw.data[count_data_big_array];
@@ -104,7 +106,7 @@ function skinfilter(){
       var b = draw.data[count_data_big_array+2];
       var a = draw.data[count_data_big_array+3];
 
-      hsv = rgb2Hsv(r,g,b);
+      var hsv = rgb2Hsv(r,g,b);
       //When the hand is too lose (hsv[0] > 0.59 && hsv[0] < 1.0)
       //Skin Range on HSV values
       if(((hsv[0] > huemin && hsv[0] < huemax)||(hsv[0] > 0.59 && hsv[0] < 1.0))&&(hsv[1] > satmin && hsv[1] < satmax)&&(hsv[2] > valmin && hsv[2] < valmax)){
@@ -120,11 +122,10 @@ function skinfilter(){
         skin_filter.data[count_data_big_array+3]=0;
       }
 
-      count_data_big_array=index_value*4;
+      count_data_big_array = index_value * 4;
     }
   }
-  draw=skin_filter;
-  // c_.putImageData(draw,0,0);
+  draw = skin_filter;
 }
 
 function rgb2Hsv(r, g, b){
@@ -164,7 +165,12 @@ var wasdown = false;
 
 function test(){
   var delt = _.createImageData(width,height);
-  var totalx=0,totaly=0,totald=0,totaln=delt.width*delt.height,dscl=0,pix=totaln*4;
+  var totalx = 0;
+  var totaly = 0;
+  var totald = 0;
+  var totaln = delt.width * delt.height;
+  var dscl = 0;
+  var pix = totaln * 4;
 
   if(last !== false){
 
@@ -196,15 +202,15 @@ function test(){
   }
 
   if (totald){
-    down={
+    down = {
       x: totalx/totald,
       y: totaly/totald,
       d: totald
     };
     handleGesture();
   }
-  // console.log(totald)
-  last=draw;
+
+  last = draw;
   c_.putImageData(delt,0,0);
 }
 
@@ -214,9 +220,9 @@ var overthresh = 1000;
 
 function calibrate(){
   wasdown = {
-    x:down.x,
-    y:down.y,
-    d:down.d
+    x: down.x,
+    y: down.y,
+    d: down.d
   };
 }
 
