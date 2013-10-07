@@ -55,15 +55,31 @@ adaptive.provider('$motion', [function() {
   var start = function(){
     console.log('start');
 
-    navigator.webkitGetUserMedia({audio:false,video:true},function(stream){
-      var s = stream;
-      video.src = window.webkitURL.createObjectURL(stream);
-      video.addEventListener('play', function() {
-        requestId = window.requestAnimationFrame(dump);
-      });
-    },function(){
-      console.log('OOOOOOOH! DEEEEENIED!');
-    });
+    var hasGetUserMedia = function() {
+      return !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+    };
+
+    window.URL = window.URL || window.webkitURL;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+    if (navigator.getUserMedia) {
+      navigator.getUserMedia({audio: false, video: true},
+        function(stream){
+          video.src = window.URL.createObjectURL(stream);
+          video.addEventListener('play', function() {
+            window.setTimeout(function(){
+              requestId = window.requestAnimationFrame(dump);
+            }, 1000);
+          });
+        },
+        function(){
+          console.error('Denied!');
+        }
+      );
+    }
+    else {
+      console.error('getUserMedia() is not supported in your browser');
+    }
   };
 
   var stop = function(){
@@ -77,14 +93,15 @@ adaptive.provider('$motion', [function() {
       canvas.width = ccanvas.width = width;
       canvas.height = ccanvas.height = height;
     }
-    _.drawImage(video,width,0,-width,height);
+
+    _.drawImage(video,0,0,width,height);
     draw = _.getImageData(0,0,width,height);
     // c_.putImageData(draw,0,0);
     skinfilter();
     test();
 
     requestId = window.requestAnimationFrame(dump);
-  }
+  };
 
 var huemin=0.0;
 var huemax=0.10;
@@ -130,7 +147,7 @@ var skinfilter = function(){
     }
   }
   draw = skin_filter;
-}
+};
 
 var rgb2Hsv = function(r, g, b){
 
@@ -160,7 +177,7 @@ var rgb2Hsv = function(r, g, b){
   }
 
   return [h, s, v];
-}
+};
 
 var last = false;
 var thresh = 150;
@@ -216,7 +233,7 @@ var test = function(){
 
   last = draw;
   c_.putImageData(delt,0,0);
-}
+};
 
 var movethresh = 2;
 var brightthresh = 300;
@@ -276,7 +293,7 @@ var handleGesture = function(){
       state = 2;
       break;
   }
-}
+};
 
 
   this.$get = function() {
