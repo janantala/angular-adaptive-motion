@@ -83,7 +83,7 @@ adaptive.provider('$motion', [function() {
   };
 
   var stop = function(){
-
+    window.cancelAnimationFrame(requestId);
   };
 
   var dump = function() {
