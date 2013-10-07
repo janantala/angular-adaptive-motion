@@ -224,47 +224,45 @@ var avg = 0;
 var state = 0; //States: 0 waiting for gesture, 1 waiting for next move after gesture, 2 waiting for gesture to end
 
 function handleGesture(){
-  avg= 0.9 * avg + 0.1 * down.d;
-  var davg=down.d - avg, good = davg>brightthresh;
-  //console.log(davg)
+  avg = 0.9 * avg + 0.1 * down.d;
+  var davg = down.d - avg;
+  var good = davg > brightthresh;
+
   switch (state){
     case 0:
       if (good){ //Found a gesture, waiting for next move
-        state=1;
+        state = 1;
         calibrate();
       }
       break;
     case 2: //Wait for gesture to end
       if (!good){ //Gesture ended
-        state=0;
+        state = 0;
       }
       break;
     case 1: //Got next move, do something based on direction
-      var dx=down.x-wasdown.x,dy=down.y-wasdown.y;
-      var dirx=Math.abs(dy)<Math.abs(dx); //(dx,dy) is on a bowtie
-      //console.log(good,davg)
-      if (dx<-movethresh&&dirx){
-        console.log('from right to left');
-      }
-      else if (dx>movethresh&&dirx){
-        console.log('from left to right');
-      }
-      if (dy>movethresh&&!dirx){
-        if (davg>overthresh){
-          console.log('over up');
+      var dx = down.x - wasdown.x;
+      var dy = down.y - wasdown.y;
+      var dirx = Math.abs(dy) < Math.abs(dx); //(dx,dy) is on a bowtie
+      console.log(dx, dy, dirx);
+
+      if (dirx) {
+        if (dx < - movethresh){
+          console.log('from right to left');
         }
-        else{
-          console.log('up');
+        else if (dx > movethresh){
+          console.log('from left to right');
         }
       }
-      else if (dy<-movethresh&&!dirx){
-        if (davg>overthresh){
-          console.log('over down');
+      else {
+        if (dy > movethresh){
+          console.log('from up to down');
         }
-        else{
-          console.log('down');
+        else if (dy < - movethresh){
+          console.log('from down to up');
         }
       }
+
       state=2;
       break;
   }
