@@ -66,7 +66,11 @@ adaptive.provider('$motion', [function() {
     });
   };
 
-  function dump() {
+  var stop = function(){
+
+  };
+
+  var dump = function() {
     if (canvas.width != video.videoWidth){
       width = Math.floor(video.videoWidth/compression);
       height = Math.floor(video.videoHeight/compression);
@@ -89,7 +93,7 @@ var satmax=1.0;
 var valmin=0.4;
 var valmax=1.0;
 
-function skinfilter(){
+var skinfilter = function(){
 
   var skin_filter = _.getImageData(0,0,width,height);
   var total_pixels = skin_filter.width*skin_filter.height;
@@ -128,7 +132,7 @@ function skinfilter(){
   draw = skin_filter;
 }
 
-function rgb2Hsv(r, g, b){
+var rgb2Hsv = function(r, g, b){
 
   r = r/255;
   g = g/255;
@@ -163,7 +167,7 @@ var thresh = 150;
 var down = false;
 var wasdown = false;
 
-function test(){
+var test = function(){
   var delt = _.createImageData(width,height);
   var totalx = 0;
   var totaly = 0;
@@ -218,7 +222,7 @@ var movethresh = 2;
 var brightthresh = 300;
 var overthresh = 1000;
 
-function calibrate(){
+var calibrate = function(){
   wasdown = {
     x: down.x,
     y: down.y,
@@ -229,7 +233,7 @@ function calibrate(){
 var avg = 0;
 var state = 0; //States: 0 waiting for gesture, 1 waiting for next move after gesture, 2 waiting for gesture to end
 
-function handleGesture(){
+var handleGesture = function(){
   avg = 0.9 * avg + 0.1 * down.d;
   var davg = down.d - avg;
   var good = davg > brightthresh;
@@ -269,7 +273,7 @@ function handleGesture(){
         }
       }
 
-      state=2;
+      state = 2;
       break;
   }
 }
@@ -279,6 +283,9 @@ function handleGesture(){
     return {
       start: function(){
         start();
+      },
+      stop: function(){
+        stop();
       }
     };
   };
