@@ -53,6 +53,7 @@ adaptive.provider('$motion', [function() {
   var height = 0;
 
   var draw;
+  var localMediaStream;
 
   var start = function(){
     console.log('start');
@@ -63,6 +64,7 @@ adaptive.provider('$motion', [function() {
     if (navigator.getUserMedia) {
       navigator.getUserMedia({audio: false, video: true},
         function(stream){
+          localMediaStream = stream;
           video.src = window.URL.createObjectURL(stream);
           video.addEventListener('play', function() {
             window.setTimeout(function(){
@@ -82,6 +84,8 @@ adaptive.provider('$motion', [function() {
 
   var stop = function(){
     window.cancelAnimationFrame(requestId);
+    localMediaStream && localMediaStream.stop();
+    localMediaStream = undefined;
   };
 
   var dump = function() {
