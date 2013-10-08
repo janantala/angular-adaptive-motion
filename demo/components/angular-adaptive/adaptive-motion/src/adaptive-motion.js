@@ -40,11 +40,13 @@ var adaptive = angular.module('adaptive.motion', []);
 adaptive.provider('$motion', [function() {
 
   var requestId;
-  var video = document.getElementById('video');
-  var canvas = document.getElementById('canvas');
+  var video = document.createElement('video');
+  video.setAttribute('autoplay', 'true');
+  video.setAttribute('width', '300');
+  var canvas = document.createElement('canvas');
+  var ccanvas = document.createElement('canvas');
   var _ = canvas.getContext('2d');
-  var ccanvas = document.getElementById('comp');
-  var c_= ccanvas.getContext('2d');
+  var c_ = ccanvas.getContext('2d');
 
   var compression = 5;
   var width = 0;
@@ -275,18 +277,18 @@ var handleGesture = function(){
 
       if (dirx) {
         if (dx < - movethresh){
-          console.log('from right to left');
+          console.log('Swipe right.');
         }
         else if (dx > movethresh){
-          console.log('from left to right');
+          console.log('Swipe left.');
         }
       }
       else {
         if (dy > movethresh){
-          console.log('from up to down');
+          console.log('Swipe down.');
         }
         else if (dy < - movethresh){
-          console.log('from down to up');
+          console.log('Swipe up.');
         }
       }
 
