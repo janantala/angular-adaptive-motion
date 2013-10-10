@@ -196,7 +196,7 @@ adaptive.provider('$motion', [function() {
       var edge = _.createImageData(width, height);
       var totalx = 0;
       var totaly = 0;
-      var totald = 0;
+      var changed = 0;
       var pix = edge.width * edge.height * 4;
 
       if (lastDraw){
@@ -211,7 +211,7 @@ adaptive.provider('$motion', [function() {
             edge.data[pix+1] = 0;
             edge.data[pix+2] = 0;
             edge.data[pix+3] = 255;
-            totald += 1;
+            changed += 1;
             totalx += (pix/4) % width;
             totaly += Math.floor((pix/4) / edge.height);
           }
@@ -224,14 +224,13 @@ adaptive.provider('$motion', [function() {
         }
       }
 
-      $rootScope.$broadcast('adaptive.motion:onMovement', edge);
-      
+      if (changed){
+        $rootScope.$broadcast('adaptive.motion:onMovement', edge);
 
-      if (totald){
         var down = {
-          x: totalx / totald,
-          y: totaly / totald,
-          d: totald
+          x: totalx / changed,
+          y: totaly / changed,
+          d: changed
         };
         recognizeGesture(down);
       }
