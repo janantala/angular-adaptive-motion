@@ -278,7 +278,8 @@ adaptive.provider('$motion', [function() {
         case 1: //Got next move, do something based on direction
           var dx = down.x - lastDown.x;
           var dy = down.y - lastDown.y;
-          var dirx = Math.abs(dy) < Math.abs(dx); //(dx,dy) is on a bowtie
+          var dirx = Math.abs(dy) < Math.abs(dx) - movethresh; //(dx,dy) is on a bowtie
+          var diry = Math.abs(dx) < Math.abs(dy) - movethresh; //(dx,dy) is on a bowtie
           console.log(dx, dy, dirx);
 
           if (dirx) {
@@ -289,7 +290,7 @@ adaptive.provider('$motion', [function() {
               $rootScope.$broadcast('adaptive.motion:onSwipeLeft');
             }
           }
-          else {
+          else if (diry) {
             if (dy > movethresh){
               $rootScope.$broadcast('adaptive.motion:onSwipeDown');
             }
