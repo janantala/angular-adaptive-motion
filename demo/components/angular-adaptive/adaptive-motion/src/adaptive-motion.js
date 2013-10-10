@@ -92,6 +92,21 @@ adaptive.provider('$motion', [function() {
     var draw;
     var localMediaStream;
 
+    var huemin = 0.0;
+    var huemax = 0.10;
+    var satmin = 0.0;
+    var satmax = 1.0;
+    var valmin = 0.4;
+    var valmax = 1.0;
+
+    var lastDraw;
+    var thresh = 150;
+    var lastDown = {
+      x: 0,
+      y: 0,
+      d: 0
+    };
+
     var start = function(){
       console.log('start');
 
@@ -135,117 +150,105 @@ adaptive.provider('$motion', [function() {
 
       _.drawImage(video,0,0,width,height);
       draw = _.getImageData(0, 0, width, height);
-      // c_.putImageData(draw,0,0);
-      skinfilter();
-      test();
+      var skinFilter = filterSkin(draw);
+      lastDraw = getMovements(skinFilter);
 
       requestId = window.requestAnimationFrame(dump);
     };
 
-    var huemin = 0.0;
-    var huemax = 0.10;
-    var satmin = 0.0;
-    var satmax = 1.0;
-    var valmin = 0.4;
-    var valmax = 1.0;
+    var filterSkin = function(draw){
 
-    var skinfilter = function(){
+      var skinFilter = _.getImageData(0,0,width,height);
+      var totalPixels = skinFilter.width * skinFilter.height;
+      var indexValue = totalPixels * 4;
 
-      var skin_filter = _.getImageData(0,0,width,height);
-      var total_pixels = skin_filter.width * skin_filter.height;
-      var index_value = total_pixels * 4;
-
-      var count_data_big_array = 0;
+      var countDataBigArray = 0;
       for (var y=0; y<height; y++)
       {
         for (var x=0; x<width; x++)
         {
-          index_value = x+y*width;
-          var r = draw.data[count_data_big_array];
-          var g = draw.data[count_data_big_array+1];
-          var b = draw.data[count_data_big_array+2];
-          var a = draw.data[count_data_big_array+3];
+          indexValue = x+y*width;
+          var r = draw.data[countDataBigArray];
+          var g = draw.data[countDataBigArray+1];
+          var b = draw.data[countDataBigArray+2];
+          var a = draw.data[countDataBigArray+3];
 
           var hsv = rgb2Hsv(r,g,b);
           //When the hand is too lose (hsv[0] > 0.59 && hsv[0] < 1.0)
           //Skin Range on HSV values
           if(((hsv[0] > huemin && hsv[0] < huemax)||(hsv[0] > 0.59 && hsv[0] < 1.0))&&(hsv[1] > satmin && hsv[1] < satmax)&&(hsv[2] > valmin && hsv[2] < valmax)){
-            skin_filter[count_data_big_array] = r;
-            skin_filter[count_data_big_array+1] = g;
-            skin_filter[count_data_big_array+2] = b;
-            skin_filter[count_data_big_array+3] = a;
+            skinFilter[countDataBigArray] = r;
+            skinFilter[countDataBigArray+1] = g;
+            skinFilter[countDataBigArray+2] = b;
+            skinFilter[countDataBigArray+3] = a;
           }
           else{
-            skin_filter.data[count_data_big_array] = 0;
-            skin_filter.data[count_data_big_array+1] = 0;
-            skin_filter.data[count_data_big_array+2] = 0;
-            skin_filter.data[count_data_big_array+3] = 0;
+            skinFilter.data[countDataBigArray] = 0;
+            skinFilter.data[countDataBigArray+1] = 0;
+            skinFilter.data[countDataBigArray+2] = 0;
+            skinFilter.data[countDataBigArray+3] = 0;
           }
 
-          count_data_big_array = index_value * 4;
+          countDataBigArray = indexValue * 4;
         }
       }
-      draw = skin_filter;
+      return skinFilter;
     };
 
-    var last = false;
-    var thresh = 150;
-    var down = false;
-    var wasdown = false;
-
-    var test = function(){
-      var delt = _.createImageData(width, height);
+    var getMovements = function(draw){
+      var delta = _.createImageData(width, height);
       var totalx = 0;
       var totaly = 0;
       var totald = 0;
-      var totaln = delt.width * delt.height;
+      var totaln = delta.width * delta.height;
       var dscl = 0;
       var pix = totaln * 4;
 
-      if(last !== false){
+      if (lastDraw){
 
         while ((pix -= 4) > 0) {
-          var d = Math.abs(draw.data[pix] - last.data[pix]) +
-                  Math.abs(draw.data[pix+1] - last.data[pix+1]) +
-                  Math.abs(draw.data[pix+2]-last.data[pix+2]);
+          var d = Math.abs(draw.data[pix] - lastDraw.data[pix]) +
+                  Math.abs(draw.data[pix+1] - lastDraw.data[pix+1]) +
+                  Math.abs(draw.data[pix+2]-lastDraw.data[pix+2]);
 
           if (d > thresh){
-            delt.data[pix] = 160;
-            delt.data[pix+1] = 255;
-            delt.data[pix+2] = 255;
-            delt.data[pix+3] = 255;
+            delta.data[pix] = 160;
+            delta.data[pix+1] = 255;
+            delta.data[pix+2] = 255;
+            delta.data[pix+3] = 255;
             totald += 1;
             totalx += (pix/4) % width;
-            totaly += Math.floor((pix/4) / delt.height);
+            totaly += Math.floor((pix/4) / delta.height);
           }
           else {
-            delt.data[pix] = 0;
-            delt.data[pix+1] = 0;
-            delt.data[pix+2] = 0;
-            delt.data[pix+3] = 0;
+            delta.data[pix] = 0;
+            delta.data[pix+1] = 0;
+            delta.data[pix+2] = 0;
+            delta.data[pix+3] = 0;
           }
         }
       }
 
       if (totald){
-        down = {
+        var down = {
           x: totalx / totald,
           y: totaly / totald,
           d: totald
         };
-        handleGesture();
+        recognizeGesture(down);
       }
 
-      last = draw;
-      c_.putImageData(delt,0,0);
+      c_.putImageData(delta,0,0);
+
+      return draw;
     };
 
     var movethresh = 2;
     var brightthresh = 300;
     var overthresh = 1000;
 
-    var calibrate = function(){
-      wasdown = {
+    var calibrate = function(down){
+      lastDown = {
         x: down.x,
         y: down.y,
         d: down.d
@@ -255,26 +258,26 @@ adaptive.provider('$motion', [function() {
     var avg = 0;
     var state = 0; //States: 0 waiting for gesture, 1 waiting for next move after gesture, 2 waiting for gesture to end
 
-    var handleGesture = function(){
+    var recognizeGesture = function(down){
       avg = 0.9 * avg + 0.1 * down.d;
       var davg = down.d - avg;
-      var good = davg > brightthresh;
+      var foundGesture = davg > brightthresh;
 
       switch (state){
         case 0:
-          if (good){ //Found a gesture, waiting for next move
+          if (foundGesture){ //Found a gesture, waiting for next move
             state = 1;
-            calibrate();
+            calibrate(down);
           }
           break;
         case 2: //Wait for gesture to end
-          if (!good){ //Gesture ended
+          if (!foundGesture){ //Gesture ended
             state = 0;
           }
           break;
         case 1: //Got next move, do something based on direction
-          var dx = down.x - wasdown.x;
-          var dy = down.y - wasdown.y;
+          var dx = down.x - lastDown.x;
+          var dy = down.y - lastDown.y;
           var dirx = Math.abs(dy) < Math.abs(dx); //(dx,dy) is on a bowtie
           console.log(dx, dy, dirx);
 
