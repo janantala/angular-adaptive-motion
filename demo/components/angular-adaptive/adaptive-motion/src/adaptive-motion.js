@@ -44,10 +44,7 @@ adaptive.provider('$motion', [function() {
   video.setAttribute('autoplay', 'true');
   video.setAttribute('width', '300');
   var canvas = document.createElement('canvas');
-  var ccanvas = document.createElement('canvas');
   var _ = canvas.getContext('2d');
-  var c_ = ccanvas.getContext('2d');
-
   
 
   var rgb2Hsv = function(r, g, b){
@@ -120,7 +117,7 @@ adaptive.provider('$motion', [function() {
             video.src = window.URL.createObjectURL(stream);
             video.addEventListener('play', function() {
               window.setTimeout(function(){
-                requestId = window.requestAnimationFrame(dump);
+                requestId = window.requestAnimationFrame(redraw);
               }, 1000);
             });
           },
@@ -140,12 +137,12 @@ adaptive.provider('$motion', [function() {
       localMediaStream = undefined;
     };
 
-    var dump = function() {
+    var redraw = function() {
       if (canvas.width !== video.videoWidth){
         width = Math.floor(video.videoWidth / compression);
         height = Math.floor(video.videoHeight / compression);
-        canvas.width = ccanvas.width = width;
-        canvas.height = ccanvas.height = height;
+        canvas.width = width;
+        canvas.height = height;
       }
 
       _.drawImage(video,0,0,width,height);
@@ -153,7 +150,7 @@ adaptive.provider('$motion', [function() {
       var skinFilter = filterSkin(draw);
       lastDraw = getMovements(skinFilter);
 
-      requestId = window.requestAnimationFrame(dump);
+      requestId = window.requestAnimationFrame(redraw);
     };
 
     var filterSkin = function(draw){
@@ -196,38 +193,39 @@ adaptive.provider('$motion', [function() {
     };
 
     var getMovements = function(draw){
-      var delta = _.createImageData(width, height);
+      var edge = _.createImageData(width, height);
       var totalx = 0;
       var totaly = 0;
       var totald = 0;
-      var totaln = delta.width * delta.height;
-      var dscl = 0;
-      var pix = totaln * 4;
+      var pix = edge.width * edge.height * 4;
 
       if (lastDraw){
 
         while ((pix -= 4) > 0) {
-          var d = Math.abs(draw.data[pix] - lastDraw.data[pix]) +
+          var rgbaDelta = Math.abs(draw.data[pix] - lastDraw.data[pix]) +
                   Math.abs(draw.data[pix+1] - lastDraw.data[pix+1]) +
-                  Math.abs(draw.data[pix+2]-lastDraw.data[pix+2]);
+                  Math.abs(draw.data[pix+2] - lastDraw.data[pix+2]);
 
-          if (d > thresh){
-            delta.data[pix] = 160;
-            delta.data[pix+1] = 255;
-            delta.data[pix+2] = 255;
-            delta.data[pix+3] = 255;
+          if (rgbaDelta > thresh){
+            edge.data[pix] = 0;
+            edge.data[pix+1] = 0;
+            edge.data[pix+2] = 0;
+            edge.data[pix+3] = 255;
             totald += 1;
             totalx += (pix/4) % width;
-            totaly += Math.floor((pix/4) / delta.height);
+            totaly += Math.floor((pix/4) / edge.height);
           }
           else {
-            delta.data[pix] = 0;
-            delta.data[pix+1] = 0;
-            delta.data[pix+2] = 0;
-            delta.data[pix+3] = 0;
+            edge.data[pix] = 0;
+            edge.data[pix+1] = 0;
+            edge.data[pix+2] = 0;
+            edge.data[pix+3] = 0;
           }
         }
       }
+
+      $rootScope.$broadcast('adaptive.motion:onMovement', edge);
+      
 
       if (totald){
         var down = {
@@ -237,8 +235,6 @@ adaptive.provider('$motion', [function() {
         };
         recognizeGesture(down);
       }
-
-      c_.putImageData(delta,0,0);
 
       return draw;
     };
@@ -348,6 +344,20 @@ adaptive.provider('$motion', [function() {
         onSwipeDown(cb);
       }
     };
+  };
+}]);
+
+adaptive.directive('motion', ['$rootScope', function ($rootScope) {
+  return {
+    restrict: 'A',
+    link: function postLink(scope, element, attrs) {
+      var canvas = element[0];
+      var _ = canvas.getContext('2d');
+
+      $rootScope.$on('adaptive.motion:onMovement', function(e, edge){
+        _.putImageData(edge, 0, 0);
+      });
+    }
   };
 }]);
 
