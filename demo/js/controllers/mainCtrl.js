@@ -16,27 +16,31 @@ motion.controller('mainCtrl', function mainCtrl($scope, $rootScope, $motion) {
   $motion.start();
 
   $motion.onSwipeLeft(function(data){
-    console.log('onSwipeLeft');
-    playSound();
-    $scope.$apply();
+    $scope.$apply(function(){
+      console.log('onSwipeLeft');
+      playSound();
+    });
   });
 
   $motion.onSwipeRight(function(data){
-    console.log('onSwipeRight');
-    playSound();
-    $scope.$apply();
+    $scope.$apply(function(){
+      console.log('onSwipeRight');
+      playSound();
+    });
   });
 
   $motion.onSwipeUp(function(data){
-    console.log('onSwipeUp');
-    playSound();
-    $scope.$apply();
+    $scope.$apply(function(){
+      console.log('onSwipeUp');
+      playSound();
+    });
   });
 
   $motion.onSwipeDown(function(data){
-    console.log('onSwipeDown');
-    playSound();
-    $scope.$apply();
+    $scope.$apply(function(){
+      console.log('onSwipeDown');
+      playSound();
+    });
   });
 
 });

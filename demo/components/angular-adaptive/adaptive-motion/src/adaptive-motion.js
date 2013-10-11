@@ -116,9 +116,7 @@ adaptive.provider('$motion', [function() {
             localMediaStream = stream;
             video.src = window.URL.createObjectURL(stream);
             video.addEventListener('play', function() {
-              window.setTimeout(function(){
-                requestId = window.requestAnimationFrame(redraw);
-              }, 1000);
+              requestId = window.requestAnimationFrame(redraw);
             });
           },
           function(){
@@ -145,12 +143,22 @@ adaptive.provider('$motion', [function() {
         canvas.height = height;
       }
 
-      _.drawImage(video,0,0,width,height);
-      draw = _.getImageData(0, 0, width, height);
-      var skinFilter = filterSkin(draw);
-      lastDraw = getMovements(skinFilter);
+      try {
+        _.drawImage(video,0,0,width,height);
+        draw = _.getImageData(0, 0, width, height);
+        var skinFilter = filterSkin(draw);
+        lastDraw = getMovements(skinFilter);
 
-      requestId = window.requestAnimationFrame(redraw);
+        requestId = window.requestAnimationFrame(redraw);
+      }
+      catch (e) {
+        if (e.name == 'NS_ERROR_NOT_AVAILABLE') {
+          requestId = window.requestAnimationFrame(redraw);
+        }
+        else {
+          throw e;
+        }
+      }
     };
 
     var filterSkin = function(draw){
