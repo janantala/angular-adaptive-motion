@@ -7,11 +7,13 @@
 <title>AngularJS • motion</title>
 <style>
   [ng-cloak] { display: none; }
-  html, body { padding: 0; margin: 0; font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif; }
-
-  body {
-    padding: 50px 0;
+  html, body { 
+    padding: 0; margin: 0; 
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif; 
+    background: black;
+    color: yellow;
   }
+
 
   * {
     -webkit-box-sizing: border-box;
@@ -19,16 +21,94 @@
     box-sizing: border-box;
   }
 
+  .background {
+    background-color: black;
+    padding-top: 200px;
+    padding-left: 150px;
+    padding-bottom: 150px;
+    position: relative;
+  }
+
+  .canvas {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 100;
+    width: 300px;
+    height: 150px;
+  }
+
+  .lightsaber-container {
+    position: relative;
+    margin: 10px auto;
+    width: 300px;
+    height: 300px;
+    z-index: 1;
+    -webkit-perspective: 1000;
+    perspective: 1000;
+  }
+
+  .lightsaber {
+    width: 100%;
+    height: auto;
+
+    -webkit-transform: rotateZ(270deg);
+    transform: rotateZ(270deg);
+
+    -webkit-transform-origin:20% 50%;
+    transform-origin:20% 50%;
+    transition: 1s;
+  }
+
+  .lightsaber.lightsaber-left {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+  }
+
+  .lightsaber.lightsaber-right {
+    -webkit-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+
+  }
+
+  .lightsaber.lightsaber-up {
+    -webkit-transform: rotateZ(270deg);
+    transform: rotateZ(270deg);
+  }
+
+  .lightsaber.lightsaber-down {
+    -webkit-transform: rotateZ(90deg);
+    transform: rotateZ(90deg);
+  }
+
 </style>
 </head>
 <body ng-controller="mainCtrl">
     
     <section class="content">
-    
         <h2 class="center">Adaptive motion</h2>
 
-        <canvas motion></canvas>
-        
+        <p>Visualization:</p>
+        <input type="radio" ng-model="visualization" value="video">  video <br/>
+        <input type="radio" ng-model="visualization" value="skin"> skin <br/>
+        <input type="radio" ng-model="visualization" value="edge"> edge <br/>
+        <input type="radio" ng-model="visualization" value="none"> none <br/>
+
+        <div class="background">
+          
+          <div ng-switch="visualization">
+            <canvas adaptive-motion="video" ng-switch-when="video" class="canvas"></canvas>
+            <canvas adaptive-motion="skin" ng-switch-when="skin" class="canvas"></canvas>
+            <canvas adaptive-motion="edge" ng-switch-when="edge" class="canvas"></canvas>
+          </div>
+
+          <div class="lightsaber-container">
+            <img src="/assets/lightsaber.jpg" class="lightsaber" ng-class="lightsaberDirection"/>
+          </div>
+
+        </div>
+
+
         <h4>Credits:</h4>
         <p><a href="http://twitter.com/janantala">Jan Antala</a></p>
     </section>

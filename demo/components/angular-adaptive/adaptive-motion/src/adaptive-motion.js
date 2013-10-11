@@ -146,6 +146,7 @@ adaptive.provider('$motion', [function() {
       try {
         _.drawImage(video,0,0,width,height);
         draw = _.getImageData(0, 0, width, height);
+        $rootScope.$broadcast('adaptive.motion:videoData', draw);
         var skinFilter = filterSkin(draw);
         lastDraw = getMovements(skinFilter);
 
@@ -188,15 +189,16 @@ adaptive.provider('$motion', [function() {
             skinFilter[countDataBigArray+3] = a;
           }
           else{
-            skinFilter.data[countDataBigArray] = 0;
-            skinFilter.data[countDataBigArray+1] = 0;
-            skinFilter.data[countDataBigArray+2] = 0;
-            skinFilter.data[countDataBigArray+3] = 0;
+            skinFilter.data[countDataBigArray] = 255;
+            skinFilter.data[countDataBigArray+1] = 255;
+            skinFilter.data[countDataBigArray+2] = 255;
+            skinFilter.data[countDataBigArray+3] = 255;
           }
 
           countDataBigArray = indexValue * 4;
         }
       }
+      $rootScope.$broadcast('adaptive.motion:skinData', skinFilter);
       return skinFilter;
     };
 
@@ -224,16 +226,16 @@ adaptive.provider('$motion', [function() {
             totaly += Math.floor((pix/4) / edge.height);
           }
           else {
-            edge.data[pix] = 0;
-            edge.data[pix+1] = 0;
-            edge.data[pix+2] = 0;
-            edge.data[pix+3] = 0;
+            edge.data[pix] = 255;
+            edge.data[pix+1] = 255;
+            edge.data[pix+2] = 255;
+            edge.data[pix+3] = 255;
           }
         }
       }
 
       if (changed){
-        $rootScope.$broadcast('adaptive.motion:onMovement', edge);
+        $rootScope.$broadcast('adaptive.motion:edgeData', edge);
 
         var down = {
           x: totalx / changed,
@@ -354,16 +356,30 @@ adaptive.provider('$motion', [function() {
   };
 }]);
 
-adaptive.directive('motion', ['$rootScope', function ($rootScope) {
+adaptive.directive('adaptiveMotion', ['$rootScope', function ($rootScope) {
   return {
     restrict: 'A',
     link: function postLink(scope, element, attrs) {
       var canvas = element[0];
       var _ = canvas.getContext('2d');
 
-      $rootScope.$on('adaptive.motion:onMovement', function(e, edge){
-        _.putImageData(edge, 0, 0);
-      });
+      if (attrs['adaptiveMotion'] === 'video'){
+        $rootScope.$on('adaptive.motion:videoData', function(e, data){
+          _.putImageData(data, 0, 0);
+        });
+      }
+      else if (attrs['adaptiveMotion'] === 'skin'){
+        $rootScope.$on('adaptive.motion:skinData', function(e, data){
+          _.putImageData(data, 0, 0);
+        });
+      }
+      else {
+        $rootScope.$on('adaptive.motion:edgeData', function(e, data){
+          _.putImageData(data, 0, 0);
+        });
+      }
+
+      
     }
   };
 }]);
