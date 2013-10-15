@@ -31,7 +31,7 @@ Add the **adaptive.motion** module as a dependency to your application module:
 
     var myAppModule = angular.module('MyApp', ['adaptive.motion']);
 
-and include $motion provider as a dependency to your controller:
+and include `$motion` provider as a dependency to your controller:
 
     angular.module('MyApp').controller('MainCtrl', function ['$scope', '$motion', ($scope, $motion) {
 
@@ -46,16 +46,50 @@ You can configure provider to a custom settings in app configuration.
 ### Public methods
 
 #### $motion.start();
+Start gesture recognition.
 
 #### $motion.stop();
+Stop gesture recognition.
 
 #### $motion.onSwipeLeft(cb);
+On swipe left gesture.
+```
+$motion.onSwipeLeft(function(data){
+    $scope.$apply(function(){
+        console.log('onSwipeLeft');
+    });
+});
+```
 
 #### $motion.onSwipeRight(cb);
+On swipe right gesture.
+```
+$motion.onSwipeRight(function(data){
+    $scope.$apply(function(){
+        console.log('onSwipeRight');
+    });
+});
+```
 
 #### $motion.onSwipeUp(cb);
+On swipe up gesture.
+```
+$motion.onSwipeUp(function(data){
+    $scope.$apply(function(){
+        console.log('onSwipeUp');
+    });
+});
+```
 
 #### $motion.onSwipeDown(cb);
+On swipe down gesture.
+```
+$motion.onSwipeDown(function(data){
+    $scope.$apply(function(){
+        console.log('onSwipeDown');
+    });
+});
+```
 
 ### Directive
 
