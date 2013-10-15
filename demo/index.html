@@ -88,6 +88,8 @@
         </div>
 
         <div class="gestures">
+          <p ng-hide="gestures.length > 0">Waiting for gesture...</p>
+          <p ng-show="gestures.length > 0">Recent gestures:</p>
           <p ng-repeat="gesture in gestures track by $index" ng-bind="gesture"></p>
         </div>
       </div>
