@@ -14,13 +14,13 @@ motion.controller('mainCtrl', function mainCtrl($scope, $rootScope, $motion) {
     audio.play();
   };
 
-  $scope.lightsaberDirection = '';
+  $scope.gestures = [];
   $motion.start();
 
   $motion.onSwipeLeft(function(data){
     $scope.$apply(function(){
       console.log('onSwipeLeft');
-      $scope.lightsaberDirection = 'lightsaber-left';
+      $scope.gestures.unshift('Swipe Left');
       playSound();
     });
   });
@@ -28,7 +28,7 @@ motion.controller('mainCtrl', function mainCtrl($scope, $rootScope, $motion) {
   $motion.onSwipeRight(function(data){
     $scope.$apply(function(){
       console.log('onSwipeRight');
-      $scope.lightsaberDirection = 'lightsaber-right';
+      $scope.gestures.unshift('Swipe Right');
       playSound();
     });
   });
@@ -36,7 +36,7 @@ motion.controller('mainCtrl', function mainCtrl($scope, $rootScope, $motion) {
   $motion.onSwipeUp(function(data){
     $scope.$apply(function(){
       console.log('onSwipeUp');
-      $scope.lightsaberDirection = 'lightsaber-up';
+      $scope.gestures.unshift('Swipe Up');
       playSound();
     });
   });
@@ -44,7 +44,7 @@ motion.controller('mainCtrl', function mainCtrl($scope, $rootScope, $motion) {
   $motion.onSwipeDown(function(data){
     $scope.$apply(function(){
       console.log('onSwipeDown');
-      $scope.lightsaberDirection = 'lightsaber-down';
+      $scope.gestures.unshift('Swipe Down');
       playSound();
     });
   });

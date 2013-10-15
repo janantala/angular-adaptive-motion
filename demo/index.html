@@ -5,13 +5,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AngularJS • motion</title>
+<link href='http://fonts.googleapis.com/css?family=Concert+One' rel='stylesheet' type='text/css'>
 <style>
   [ng-cloak] { display: none; }
   html, body { 
-    padding: 0; margin: 0; 
-    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif; 
+    font-family: helvetica; 
+    padding: 0;
+    margin: 0;
   }
-
 
   * {
     -webkit-box-sizing: border-box;
@@ -19,97 +20,93 @@
     box-sizing: border-box;
   }
 
-  .background {
-    padding-top: 200px;
-    padding-left: 150px;
-    padding-bottom: 150px;
+  h1 {
+    font-family: 'Concert One', cursive; 
+    font-size: 42px;
+  }
+
+  .header, .footer {
+    background: rgb(110,200,199);
+    padding: 10px 0;
+  }
+
+  .container {
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 5px;
+  }
+
+  .content {
+    padding: 100px 0;
     position: relative;
+    background: white;
+
+    min-height: 500px;
   }
 
   .canvas {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 10px;
     z-index: 100;
     width: 300px;
     height: 150px;
   }
 
-  .lightsaber-container {
-    position: relative;
-    margin: 10px auto;
-    width: 300px;
-    height: 300px;
-    z-index: 1;
-    -webkit-perspective: 1000;
-    perspective: 1000;
+  .supported {
+    text-align: center;
+    color: white;
   }
 
-  .lightsaber {
-    width: 100%;
-    height: auto;
-
-    -webkit-transform: rotateZ(270deg);
-    transform: rotateZ(270deg);
-
-    -webkit-transform-origin:20% 50%;
-    transform-origin:20% 50%;
-    transition: 1s;
-  }
-
-  .lightsaber.lightsaber-left {
-    -webkit-transform: rotateY(180deg);
-    transform: rotateY(180deg);
-  }
-
-  .lightsaber.lightsaber-right {
-    -webkit-transform: rotateY(0deg);
-    transform: rotateY(0deg);
-
-  }
-
-  .lightsaber.lightsaber-up {
-    -webkit-transform: rotateZ(270deg);
-    transform: rotateZ(270deg);
-  }
-
-  .lightsaber.lightsaber-down {
-    -webkit-transform: rotateZ(90deg);
-    transform: rotateZ(90deg);
+  .gestures {
+    text-align: center;
   }
 
 </style>
 </head>
 <body ng-controller="mainCtrl">
     
-    <section class="content">
-        <h2 class="center">Adaptive motion</h2>
+    <div class="header">
+      <div class="container">
+        <h1 class="center">Adaptive motion</h1>
 
         <p>Visualization:</p>
-        
+
         <label><input type="radio" ng-model="visualization" value="video">  video </label>
         <label><input type="radio" ng-model="visualization" value="skin"> skin </label>
         <label><input type="radio" ng-model="visualization" value="edge"> edge </label>
         <label><input type="radio" ng-model="visualization" value="none"> none </label>
+      </div>
+    </div>
 
-        <div class="background">
-          
-          <div ng-switch="visualization">
-            <canvas adaptive-motion="video" ng-switch-when="video" class="canvas"></canvas>
-            <canvas adaptive-motion="skin" ng-switch-when="skin" class="canvas"></canvas>
-            <canvas adaptive-motion="edge" ng-switch-when="edge" class="canvas"></canvas>
-          </div>
-
-          <div class="lightsaber-container">
-            <img src="/assets/lightsaber.jpg" class="lightsaber" ng-class="lightsaberDirection"/>
-          </div>
-
+    <div class="content">
+      <div class="container">
+        <div ng-switch="visualization">
+          <canvas adaptive-motion="video" ng-switch-when="video" class="canvas"></canvas>
+          <canvas adaptive-motion="skin" ng-switch-when="skin" class="canvas"></canvas>
+          <canvas adaptive-motion="edge" ng-switch-when="edge" class="canvas"></canvas>
         </div>
 
+        <div class="gestures">
+          <p ng-repeat="gesture in gestures track by $index" ng-bind="gesture"></p>
+        </div>
+      </div>
+    </div>
 
+    <div class="footer">
+      <div class="container">
         <h4>Credits:</h4>
         <p><a href="http://twitter.com/janantala">Jan Antala</a></p>
-    </section>
+
+        <div class="supported">
+          <h4>Supported gestures:</h4>
+          <p>Swipe Left</p>
+          <p>Swipe Right</p>
+          <p>Swipe Up</p>
+          <p>Swipe Down</p>
+        </div>
+      </div>
+    </div>
     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.js"></script>
     <script src="components/angular-adaptive/adaptive-motion/src/adaptive-motion.js"></script>
