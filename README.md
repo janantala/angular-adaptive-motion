@@ -46,10 +46,10 @@ You can configure provider to a custom settings in app configuration.
 ### Public methods
 
 #### $motion.start();
-Start gesture recognition.
+Starts gesture recognition.
 
 #### $motion.stop();
-Stop gesture recognition.
+Stops gesture recognition.
 
 #### $motion.onSwipeLeft(cb);
 On swipe left gesture.
@@ -91,21 +91,35 @@ $motion.onSwipeDown(function(data){
 });
 ```
 
-### Directive
+### Visualization
 
-If you want to visualize you can add `adaptive-motion` attribute into your canvas element.
+If you want to visualize you can add `adaptive-motion` attribute into your canvas element. 
+You can choose from following styles:
+
+
+#### Video
 
 ```
 <canvas adaptive-motion="video"></canvas>
 ```
 
+![video](https://raw.github.com/angular-adaptive/adaptive-motion/canary/screens/video.png)
+
+#### Skin
+
 ```
 <canvas adaptive-motion="skin"></canvas>
 ```
 
+![skin](https://raw.github.com/angular-adaptive/adaptive-motion/canary/screens/skin.png)
+
+#### Edge
+
 ```
 <canvas adaptive-motion="edge"></canvas>
 ```
+
+![edge](https://raw.github.com/angular-adaptive/adaptive-motion/canary/screens/edges.png)
     
 # Contributing
 
