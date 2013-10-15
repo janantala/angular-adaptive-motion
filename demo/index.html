@@ -10,8 +10,6 @@
   html, body { 
     padding: 0; margin: 0; 
     font-family: 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif; 
-    background: black;
-    color: yellow;
   }
 
 
@@ -22,7 +20,6 @@
   }
 
   .background {
-    background-color: black;
     padding-top: 200px;
     padding-left: 150px;
     padding-bottom: 150px;
@@ -89,10 +86,11 @@
         <h2 class="center">Adaptive motion</h2>
 
         <p>Visualization:</p>
-        <input type="radio" ng-model="visualization" value="video">  video <br/>
-        <input type="radio" ng-model="visualization" value="skin"> skin <br/>
-        <input type="radio" ng-model="visualization" value="edge"> edge <br/>
-        <input type="radio" ng-model="visualization" value="none"> none <br/>
+        
+        <label><input type="radio" ng-model="visualization" value="video">  video </label>
+        <label><input type="radio" ng-model="visualization" value="skin"> skin </label>
+        <label><input type="radio" ng-model="visualization" value="edge"> edge </label>
+        <label><input type="radio" ng-model="visualization" value="none"> none </label>
 
         <div class="background">
           

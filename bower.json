@@ -12,6 +12,7 @@
     "components",
     "test*",
     "demo*",
+    "screens*",
     "Gruntfile.js",
     "package.json"
   ],

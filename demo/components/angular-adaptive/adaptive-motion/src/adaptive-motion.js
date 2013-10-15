@@ -378,8 +378,6 @@ adaptive.directive('adaptiveMotion', ['$rootScope', function ($rootScope) {
           _.putImageData(data, 0, 0);
         });
       }
-
-      
     }
   };
 }]);
