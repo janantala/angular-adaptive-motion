@@ -22,7 +22,7 @@ To your `bower.json` file. Then run
 
     bower install
 
-This will copy the angular-isbn files into your `bower_components` folder, along with its dependencies. Load the script files in your application:
+This will copy the angular-adaptive-motion files into your `bower_components` folder, along with its dependencies. Load the script files in your application:
 
     <script type="text/javascript" src="components/angular/angular.js"></script>
     <script type="text/javascript" src="components/angular-adaptive-motion/src/adaptive-motion.js"></script>
