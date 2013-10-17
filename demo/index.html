@@ -63,21 +63,31 @@
     text-align: center;
   }
 
-.my-repeat-animation.ng-enter {
-  -webkit-transition: 0.5s linear all;
-  -moz-transition: 0.5s linear all;
-  -o-transition: 0.5s linear all;
-  transition: 0.5s linear all;
-}
+  .my-repeat-animation.ng-enter {
+    -webkit-transition: 0.5s linear all;
+    -moz-transition: 0.5s linear all;
+    -o-transition: 0.5s linear all;
+    transition: 0.5s linear all;
+  }
 
-.my-repeat-animation.ng-enter {
-  color: red;
-  font-size: 44px;
-}
-.my-repeat-animation.ng-enter.ng-enter-active {
-  color: black;
-  font-size: 18px;
-}
+  .my-repeat-animation.ng-enter {
+    color: red;
+    font-size: 44px;
+  }
+
+  .my-repeat-animation.ng-enter.ng-enter-active {
+    color: black;
+    font-size: 18px;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
+  a:hover, a:focus {
+    text-decoration: underline;
+  }
 
 
 </style>
@@ -125,8 +135,8 @@
           <p>Swipe Down</p>
         </div>
   
-        <p>Create by Jan Antala</p>
-        <p>2013 Licensed under MIT</p>
+        <p>Created by <a href="http://janantala.com">Jan Antala</a></p>
+        <p>2013 Licensed under <a href="http://opensource.org/licenses/MIT">MIT</a></p>
       </div>
     </div>
     
