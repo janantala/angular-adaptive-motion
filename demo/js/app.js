@@ -5,4 +5,4 @@
 /**
  * @type {angular.Module}
  */
-var motion = angular.module('motion', ['adaptive.motion']);
+var motion = angular.module('motion', ['ngAnimate', 'adaptive.motion']);

@@ -62,6 +62,23 @@
     text-align: center;
   }
 
+.my-repeat-animation.ng-enter {
+  -webkit-transition: 0.5s linear all;
+  -moz-transition: 0.5s linear all;
+  -o-transition: 0.5s linear all;
+  transition: 0.5s linear all;
+}
+
+.my-repeat-animation.ng-enter {
+  color: red;
+  font-size: 44px;
+}
+.my-repeat-animation.ng-enter.ng-enter-active {
+  color: black;
+  font-size: 18px;
+}
+
+
 </style>
 </head>
 <body ng-controller="mainCtrl">
@@ -90,7 +107,7 @@
         <div class="gestures">
           <p ng-hide="gestures.length > 0">Waiting for gesture...</p>
           <p ng-show="gestures.length > 0">Recent gestures:</p>
-          <p ng-repeat="gesture in gestures track by $index" ng-bind="gesture"></p>
+          <p ng-repeat="gesture in gestures track by $index | limitTo:2" ng-bind="gesture" class="my-repeat-animation"></p>
         </div>
       </div>
     </div>
@@ -110,7 +127,8 @@
       </div>
     </div>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular-animate.min.js"></script>
     <script src="components/angular-adaptive/adaptive-motion/src/adaptive-motion.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controllers/mainCtrl.js"></script>
