@@ -63,19 +63,19 @@
     text-align: center;
   }
 
-  .my-repeat-animation.ng-enter {
+  .gesture-animation.ng-enter {
     -webkit-transition: 0.5s linear all;
     -moz-transition: 0.5s linear all;
     -o-transition: 0.5s linear all;
     transition: 0.5s linear all;
   }
 
-  .my-repeat-animation.ng-enter {
+  .gesture-animation.ng-enter {
     color: red;
     font-size: 44px;
   }
 
-  .my-repeat-animation.ng-enter.ng-enter-active {
+  .gesture-animation.ng-enter.ng-enter-active {
     color: black;
     font-size: 18px;
   }
@@ -118,7 +118,7 @@
         <div class="gestures">
           <p ng-hide="gestures.length > 0">Waiting for gesture...</p>
           <p ng-show="gestures.length > 0">Recent gestures:</p>
-          <p ng-repeat="gesture in gestures track by $index" class="my-repeat-animation">
+          <p ng-repeat="gesture in gestures track by $index" class="gesture-animation">
             <span ng-show="$index > gestures.length - 6">{{gesture}}</span>
           </p>
         </div>
