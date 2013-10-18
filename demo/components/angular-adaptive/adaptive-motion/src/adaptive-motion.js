@@ -120,7 +120,7 @@ adaptive.provider('$motion', [function() {
             });
           },
           function(){
-            console.error('Denied!');
+            throw new Error('Denied!');
           }
         );
       }
