@@ -54,9 +54,12 @@
     height: 150px;
   }
 
-  .supported {
-    text-align: center;
+  .white {
     color: white;
+  }
+
+  .text-center {
+    text-align: center;
   }
 
   .gestures {
@@ -136,16 +139,55 @@
 
     <div class="footer">
       <div class="container">
-        <div class="supported">
-          <h4>Supported gestures:</h4>
-          <p>Swipe Left</p>
-          <p>Swipe Right</p>
-          <p>Swipe Up</p>
-          <p>Swipe Down</p>
-        </div>
+
+        <h3 class="white text-center">Usage</h3>
+        
+        <h4 class="white">$motion.start();</h4>
+        <h4 class="white">$motion.onSwipeLeft(cb);</h4>
+
+        <pre>
+$motion.onSwipeLeft(function(data){
+  $scope.$apply(function(){
+      console.log('onSwipeLeft');
+  });
+});
+        </pre>
   
-        <p>Created by <a href="http://janantala.com">Jan Antala</a></p>
-        <p>2013 Licensed under <a href="http://opensource.org/licenses/MIT">MIT</a></p>
+        <h4 class="white">$motion.$motion.onSwipeRight(cb);</h4>
+
+        <pre>
+$motion.onSwipeRight(function(data){
+  $scope.$apply(function(){
+      console.log('onSwipeRight');
+  });
+});
+        </pre>
+
+        <h4 class="white">$motion.onSwipeUp(cb);</h4>
+
+        <pre>
+$motion.onSwipeUp(function(data){
+  $scope.$apply(function(){
+      console.log('onSwipeUp');
+  });
+});
+        </pre>
+
+        <h4 class="white">$motion.onSwipeDown(cb);</h4>
+
+        <pre>
+$motion.onSwipeDown(function(data){
+  $scope.$apply(function(){
+      console.log('onSwipeDown');
+  });
+});
+        </pre>
+
+        <h4 class="white">$motion.stop();</h4>
+
+
+        <p class="text-center">Created by <a href="http://janantala.com">Jan Antala</a></p>
+        <p class="text-center">2013 Licensed under <a href="http://opensource.org/licenses/MIT">MIT</a></p>
       </div>
     </div>
     
