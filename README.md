@@ -39,8 +39,15 @@ and include `$motion` provider as a dependency to your controller:
 
 ### Configuration
 
-You can configure provider to a custom settings in app configuration.
+You can configure provider to a custom treshold options in app configuration.
 
+```
+$motionProvider.setTreshold({
+    'rgb': 150,
+    'move': 3,
+    'bright': 300
+});
+```
     
 
 ### Public methods
