@@ -59,7 +59,7 @@ var rgb2Hsv = function(r, g, b){
 
   s = max === 0 ? 0 : d / max;
 
-  if (max == min){
+  if (max === min){
       h = 0; // achromatic
   }
   else{
@@ -145,7 +145,9 @@ adaptive.provider('$motion', [function() {
 
     var stop = function(){
       window.cancelAnimationFrame(requestId);
-      localMediaStream && localMediaStream.stop();
+      if (localMediaStream) {
+        localMediaStream.stop();
+      }
       localMediaStream = undefined;
     };
 
@@ -167,7 +169,7 @@ adaptive.provider('$motion', [function() {
         requestId = window.requestAnimationFrame(redraw);
       }
       catch (e) {
-        if (e.name == 'NScontextERRORcontextNOTcontextAVAILABLE') {
+        if (e.name === 'NScontextERRORcontextNOTcontextAVAILABLE') {
           requestId = window.requestAnimationFrame(redraw);
         }
         else {
