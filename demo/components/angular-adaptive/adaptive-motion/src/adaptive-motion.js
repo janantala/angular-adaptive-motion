@@ -1,7 +1,7 @@
 /**
  * angular-adaptive-motion v0.1.0
  * The MIT License
- * Copyright (c) 2013 Jan Antala
+ * Copyright (c) 2013 Jan Antala http://janantala.com
  */
 
 (function () {
@@ -37,6 +37,43 @@ var adaptive = angular.module('adaptive.motion', []);
   }
 }());
 
+/**
+ * Converts rgb into hsv
+ * @param  {Integer} r
+ * @param  {Integer} g
+ * @param  {Integer} b
+ * @return {Array}
+ */
+var rgb2Hsv = function(r, g, b){
+
+  r = r/255;
+  g = g/255;
+  b = b/255;
+
+  var max = Math.max(r, g, b);
+  var min = Math.min(r, g, b);
+
+  var h, s, v = max;
+
+  var d = max - min;
+
+  s = max === 0 ? 0 : d / max;
+
+  if (max == min){
+      h = 0; // achromatic
+  }
+  else{
+    switch(max){
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  return [h, s, v];
+};
+
 adaptive.provider('$motion', [function() {
 
   var requestId;
@@ -44,43 +81,21 @@ adaptive.provider('$motion', [function() {
   video.setAttribute('autoplay', 'true');
   video.setAttribute('width', '300');
   var canvas = document.createElement('canvas');
-  var _ = canvas.getContext('2d');
-  
+  var context = canvas.getContext('2d');
 
-  var rgb2Hsv = function(r, g, b){
-
-    r = r/255;
-    g = g/255;
-    b = b/255;
-
-    var max = Math.max(r, g, b);
-    var min = Math.min(r, g, b);
-
-    var h, s, v = max;
-
-    var d = max - min;
-
-    s = max === 0 ? 0 : d / max;
-
-    if (max == min){
-        h = 0; // achromatic
-    }
-    else{
-      switch(max){
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
-      }
-      h /= 6;
-    }
-
-    return [h, s, v];
+  this.treshold = {
+    'rgb': 150,
+    'move': 2,
+    'bright': 300
   };
 
-  
-
+  this.setTreshold = function(treshold) {
+    angular.extend(this.treshold, treshold);
+  };
 
   this.$get = function($rootScope) {
+
+    var treshold = this.treshold;
 
     var compression = 5;
     var width = 0;
@@ -97,7 +112,6 @@ adaptive.provider('$motion', [function() {
     var valmax = 1.0;
 
     var lastDraw;
-    var thresh = 150;
     var lastDown = {
       x: 0,
       y: 0,
@@ -144,8 +158,8 @@ adaptive.provider('$motion', [function() {
       }
 
       try {
-        _.drawImage(video,0,0,width,height);
-        draw = _.getImageData(0, 0, width, height);
+        context.drawImage(video,0,0,width,height);
+        draw = context.getImageData(0, 0, width, height);
         $rootScope.$broadcast('adaptive.motion:videoData', draw);
         var skinFilter = filterSkin(draw);
         lastDraw = getMovements(skinFilter);
@@ -153,7 +167,7 @@ adaptive.provider('$motion', [function() {
         requestId = window.requestAnimationFrame(redraw);
       }
       catch (e) {
-        if (e.name == 'NS_ERROR_NOT_AVAILABLE') {
+        if (e.name == 'NScontextERRORcontextNOTcontextAVAILABLE') {
           requestId = window.requestAnimationFrame(redraw);
         }
         else {
@@ -162,9 +176,14 @@ adaptive.provider('$motion', [function() {
       }
     };
 
-    var filterSkin = function(draw){
+    /**
+     * Filters skin from video image data
+     * @param  {ImageData} video
+     * @return {ImageData}
+     */
+    var filterSkin = function(video){
 
-      var skinFilter = _.getImageData(0,0,width,height);
+      var skinFilter = context.getImageData(0,0,width,height);
       var totalPixels = skinFilter.width * skinFilter.height;
       var indexValue = totalPixels * 4;
 
@@ -174,10 +193,10 @@ adaptive.provider('$motion', [function() {
         for (var x=0; x<width; x++)
         {
           indexValue = x+y*width;
-          var r = draw.data[countDataBigArray];
-          var g = draw.data[countDataBigArray+1];
-          var b = draw.data[countDataBigArray+2];
-          var a = draw.data[countDataBigArray+3];
+          var r = video.data[countDataBigArray];
+          var g = video.data[countDataBigArray+1];
+          var b = video.data[countDataBigArray+2];
+          var a = video.data[countDataBigArray+3];
 
           var hsv = rgb2Hsv(r,g,b);
           //When the hand is too lose (hsv[0] > 0.59 && hsv[0] < 1.0)
@@ -202,8 +221,13 @@ adaptive.provider('$motion', [function() {
       return skinFilter;
     };
 
+    /**
+     * Gets movement data
+     * @param  {ImageData} draw
+     * @return {ImageData}
+     */
     var getMovements = function(draw){
-      var edge = _.createImageData(width, height);
+      var edge = context.createImageData(width, height);
       var totalx = 0;
       var totaly = 0;
       var changed = 0;
@@ -216,7 +240,7 @@ adaptive.provider('$motion', [function() {
                   Math.abs(draw.data[pix+1] - lastDraw.data[pix+1]) +
                   Math.abs(draw.data[pix+2] - lastDraw.data[pix+2]);
 
-          if (rgbaDelta > thresh){
+          if (rgbaDelta > treshold.rgb){
             edge.data[pix] = 0;
             edge.data[pix+1] = 0;
             edge.data[pix+2] = 0;
@@ -248,11 +272,11 @@ adaptive.provider('$motion', [function() {
       return draw;
     };
 
-    var movethresh = 2;
-    var brightthresh = 300;
-    var overthresh = 1000;
-
-    var calibrate = function(down){
+    /**
+     * Sets last down
+     * @param {Object} down
+     */
+    var setLastDown = function(down){
       lastDown = {
         x: down.x,
         y: down.y,
@@ -263,16 +287,20 @@ adaptive.provider('$motion', [function() {
     var avg = 0;
     var state = 0; //States: 0 waiting for gesture, 1 waiting for next move after gesture, 2 waiting for gesture to end
 
+    /**
+     * Recognizes gesture
+     * @param  {Object} down
+     */
     var recognizeGesture = function(down){
       avg = 0.9 * avg + 0.1 * down.d;
       var davg = down.d - avg;
-      var foundGesture = davg > brightthresh;
+      var foundGesture = davg > treshold.bright;
 
       switch (state){
         case 0:
           if (foundGesture){ //Found a gesture, waiting for next move
             state = 1;
-            calibrate(down);
+            setLastDown(down);
           }
           break;
         case 2: //Wait for gesture to end
@@ -283,23 +311,23 @@ adaptive.provider('$motion', [function() {
         case 1: //Got next move, do something based on direction
           var dx = down.x - lastDown.x;
           var dy = down.y - lastDown.y;
-          var dirx = Math.abs(dy) < Math.abs(dx) - movethresh; //(dx,dy) is on a bowtie
-          var diry = Math.abs(dx) < Math.abs(dy) - movethresh; //(dx,dy) is on a bowtie
+          var dirx = Math.abs(dy) < Math.abs(dx) - treshold.move;
+          var diry = Math.abs(dx) < Math.abs(dy) - treshold.move;
           console.log(dx, dy, dirx);
 
           if (dirx) {
-            if (dx < - movethresh){
+            if (dx < - treshold.move){
               $rootScope.$broadcast('adaptive.motion:onSwipeRight');
             }
-            else if (dx > movethresh){
+            else if (dx > treshold.move){
               $rootScope.$broadcast('adaptive.motion:onSwipeLeft');
             }
           }
           else if (diry) {
-            if (dy > movethresh){
+            if (dy > treshold.move){
               $rootScope.$broadcast('adaptive.motion:onSwipeDown');
             }
-            else if (dy < - movethresh){
+            else if (dy < - treshold.move){
               $rootScope.$broadcast('adaptive.motion:onSwipeUp');
             }
           }
@@ -361,21 +389,21 @@ adaptive.directive('adaptiveMotion', ['$rootScope', function ($rootScope) {
     restrict: 'A',
     link: function postLink(scope, element, attrs) {
       var canvas = element[0];
-      var _ = canvas.getContext('2d');
+      var context = canvas.getContext('2d');
 
       if (attrs['adaptiveMotion'] === 'video'){
         $rootScope.$on('adaptive.motion:videoData', function(e, data){
-          _.putImageData(data, 0, 0);
+          context.putImageData(data, 0, 0);
         });
       }
       else if (attrs['adaptiveMotion'] === 'skin'){
         $rootScope.$on('adaptive.motion:skinData', function(e, data){
-          _.putImageData(data, 0, 0);
+          context.putImageData(data, 0, 0);
         });
       }
       else {
         $rootScope.$on('adaptive.motion:edgeData', function(e, data){
-          _.putImageData(data, 0, 0);
+          context.putImageData(data, 0, 0);
         });
       }
     }
