@@ -42,6 +42,9 @@ describe('adaptive.motion', function() {
       expect($motion).toBeDefined();
       expect($motion.start).toBeDefined();
       expect($motion.stop).toBeDefined();
+      expect($motion.onStart).toBeDefined();
+      expect($motion.onStop).toBeDefined();
+      expect($motion.onError).toBeDefined();
       expect($motion.onSwipeLeft).toBeDefined();
       expect($motion.onSwipeRight).toBeDefined();
       expect($motion.onSwipeUp).toBeDefined();
@@ -49,6 +52,9 @@ describe('adaptive.motion', function() {
 
       expect(typeof $motion.start).toBe('function');
       expect(typeof $motion.stop).toBe('function');
+      expect(typeof $motion.onStart).toBe('function');
+      expect(typeof $motion.onStop).toBe('function');
+      expect(typeof $motion.onError).toBe('function');
       expect(typeof $motion.onSwipeLeft).toBe('function');
       expect(typeof $motion.onSwipeRight).toBe('function');
       expect(typeof $motion.onSwipeUp).toBe('function');

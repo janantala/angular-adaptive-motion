@@ -53,6 +53,18 @@ motion.controller('mainCtrl', function mainCtrl($scope, $rootScope, $motion) {
     });
   });
 
+  $motion.onStart(function(){
+    console.log('onStart');
+  });
+
+  $motion.onStop(function(){
+    console.log('onStart');
+  });
+
+  $motion.onError(function(err){
+    console.error('onError', err);
+  });
+
 });
 
 })();

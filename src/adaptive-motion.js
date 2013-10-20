@@ -119,7 +119,6 @@ adaptive.provider('$motion', [function() {
     };
 
     var start = function(){
-      console.log('start');
 
       window.URL = window.URL || window.webkitURL;
       navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -127,6 +126,7 @@ adaptive.provider('$motion', [function() {
       if (navigator.getUserMedia) {
         navigator.getUserMedia({audio: false, video: true},
           function(stream){
+            $rootScope.$broadcast('adaptive.motion:onStart');
             localMediaStream = stream;
             video.src = window.URL.createObjectURL(stream);
             video.addEventListener('play', function() {
@@ -134,12 +134,14 @@ adaptive.provider('$motion', [function() {
             });
           },
           function(){
-            throw new Error('Denied!');
+            $rootScope.$broadcast('adaptive.motion:onError', 'Access denied!');
+            throw new Error('Access denied!');
           }
         );
       }
       else {
-        console.error('getUserMedia() is not supported in your browser');
+        $rootScope.$broadcast('adaptive.motion:onError', 'getUserMedia() is not supported in your browser');
+        throw new Error('getUserMedia() is not supported in your browser');
       }
     };
 
@@ -149,6 +151,7 @@ adaptive.provider('$motion', [function() {
         localMediaStream.stop();
       }
       localMediaStream = undefined;
+      $rootScope.$broadcast('adaptive.motion:onStop');
     };
 
     var redraw = function() {
@@ -315,7 +318,7 @@ adaptive.provider('$motion', [function() {
           var dy = down.y - lastDown.y;
           var dirx = Math.abs(dy) < Math.abs(dx) - treshold.move;
           var diry = Math.abs(dx) < Math.abs(dy) - treshold.move;
-          console.log(dx, dy, dirx);
+          // console.log(dx, dy, dirx);
 
           if (dirx) {
             if (dx < - treshold.move){
@@ -337,6 +340,24 @@ adaptive.provider('$motion', [function() {
           state = 2;
           break;
       }
+    };
+
+    var onStart = function(cb){
+      $rootScope.$on('adaptive.motion:onStart', function(e, data){
+        cb(data);
+      });
+    };
+
+    var onStop = function(cb){
+      $rootScope.$on('adaptive.motion:onStop', function(e, data){
+        cb(data);
+      });
+    };
+
+    var onError = function(cb){
+      $rootScope.$on('adaptive.motion:onError', function(e, data){
+        cb(data);
+      });
     };
 
     var onSwipeLeft = function(cb){
@@ -369,6 +390,15 @@ adaptive.provider('$motion', [function() {
       },
       stop: function(){
         stop();
+      },
+      onStart: function(cb){
+        onStart(cb);
+      },
+      onStop: function(cb){
+        onStop(cb);
+      },
+      onError: function(cb){
+        onError(cb);
       },
       onSwipeLeft: function(cb){
         onSwipeLeft(cb);
