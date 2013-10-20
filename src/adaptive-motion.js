@@ -89,13 +89,27 @@ adaptive.provider('$motion', [function() {
     'bright': 300
   };
 
+  this.hsvFilter = {
+    'huemin': 0.0,
+    'huemax': 0.1,
+    'satmin': 0.0,
+    'satmax': 1.0,
+    'valmin': 0.4,
+    'valmax': 1.0
+  };
+
   this.setTreshold = function(treshold) {
     angular.extend(this.treshold, treshold);
+  };
+
+  this.setHsvFilter = function(hsvFilter) {
+    angular.extend(this.hsvFilter, hsvFilter);
   };
 
   this.$get = function($rootScope) {
 
     var treshold = this.treshold;
+    var hsvFilter = this.hsvFilter;
 
     var compression = 5;
     var width = 0;
@@ -103,13 +117,6 @@ adaptive.provider('$motion', [function() {
 
     var draw;
     var localMediaStream;
-
-    var huemin = 0.0;
-    var huemax = 0.10;
-    var satmin = 0.0;
-    var satmax = 1.0;
-    var valmin = 0.4;
-    var valmax = 1.0;
 
     var lastDraw;
     var lastDown = {
@@ -206,7 +213,7 @@ adaptive.provider('$motion', [function() {
           var hsv = rgb2Hsv(r,g,b);
           //When the hand is too lose (hsv[0] > 0.59 && hsv[0] < 1.0)
           //Skin Range on HSV values
-          if(((hsv[0] > huemin && hsv[0] < huemax)||(hsv[0] > 0.59 && hsv[0] < 1.0))&&(hsv[1] > satmin && hsv[1] < satmax)&&(hsv[2] > valmin && hsv[2] < valmax)){
+          if(((hsv[0] > hsvFilter.huemin && hsv[0] < hsvFilter.huemax)||(hsv[0] > 0.59 && hsv[0] < 1.0))&&(hsv[1] > hsvFilter.satmin && hsv[1] < hsvFilter.satmax)&&(hsv[2] > hsvFilter.valmin && hsv[2] < hsvFilter.valmax)){
             skinFilter[pix] = r;
             skinFilter[pix+1] = g;
             skinFilter[pix+2] = b;
