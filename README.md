@@ -59,6 +59,15 @@ Starts gesture recognition.
 #### $motion.stop();
 Stops gesture recognition.
 
+#### $motion.onStart(cb);
+On start callback.
+
+#### $motion.onStop(cb);
+On stop callback.
+
+#### $motion.onError(cb);
+On error callback.
+
 #### $motion.onSwipeLeft(cb);
 On swipe left gesture.
 ```
