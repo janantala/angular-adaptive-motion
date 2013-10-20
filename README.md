@@ -32,24 +32,11 @@ Add the **adaptive.motion** module as a dependency to your application module:
 
     var myAppModule = angular.module('MyApp', ['adaptive.motion']);
 
-and include `$motion` provider as a dependency to your controller:
+and include `$motion` service as a dependency to your controller:
 
     angular.module('MyApp').controller('MainCtrl', function ['$scope', '$motion', ($scope, $motion) {
 
     }]);
-
-### Configuration
-
-You can configure provider to a custom treshold options in app configuration.
-
-```
-$motionProvider.setTreshold({
-    'rgb': 150,
-    'move': 3,
-    'bright': 300
-});
-```
-    
 
 ### Public methods
 
@@ -105,6 +92,32 @@ $motion.onSwipeDown(function(data){
     $scope.$apply(function(){
         console.log('onSwipeDown');
     });
+});
+```
+
+
+### Configuration
+
+You can configure `$motionProvider` to a custom treshold options in app configuration.
+
+```
+$motionProvider.setTreshold({
+    'rgb': 150,
+    'move': 3,
+    'bright': 300
+});
+```
+
+You can also set custom hsv filter.
+
+```
+$motionProvider.setHsvFilter({
+    'huemin': 0.0,
+    'huemax': 0.1,
+    'satmin': 0.0,
+    'satmax': 1.0,
+    'valmin': 0.4,
+    'valmax': 1.0
 });
 ```
 
