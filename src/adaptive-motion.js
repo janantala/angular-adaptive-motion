@@ -190,36 +190,36 @@ adaptive.provider('$motion', [function() {
 
       var skinFilter = context.getImageData(0,0,width,height);
       var totalPixels = skinFilter.width * skinFilter.height;
-      var indexValue = totalPixels * 4;
+      var index = totalPixels * 4;
 
-      var countDataBigArray = 0;
+      var pix = 0;
       for (var y=0; y<height; y++)
       {
         for (var x=0; x<width; x++)
         {
-          indexValue = x+y*width;
-          var r = video.data[countDataBigArray];
-          var g = video.data[countDataBigArray+1];
-          var b = video.data[countDataBigArray+2];
-          var a = video.data[countDataBigArray+3];
+          index = x+y*width;
+          var r = video.data[pix];
+          var g = video.data[pix+1];
+          var b = video.data[pix+2];
+          var a = video.data[pix+3];
 
           var hsv = rgb2Hsv(r,g,b);
           //When the hand is too lose (hsv[0] > 0.59 && hsv[0] < 1.0)
           //Skin Range on HSV values
           if(((hsv[0] > huemin && hsv[0] < huemax)||(hsv[0] > 0.59 && hsv[0] < 1.0))&&(hsv[1] > satmin && hsv[1] < satmax)&&(hsv[2] > valmin && hsv[2] < valmax)){
-            skinFilter[countDataBigArray] = r;
-            skinFilter[countDataBigArray+1] = g;
-            skinFilter[countDataBigArray+2] = b;
-            skinFilter[countDataBigArray+3] = a;
+            skinFilter[pix] = r;
+            skinFilter[pix+1] = g;
+            skinFilter[pix+2] = b;
+            skinFilter[pix+3] = a;
           }
           else{
-            skinFilter.data[countDataBigArray] = 255;
-            skinFilter.data[countDataBigArray+1] = 255;
-            skinFilter.data[countDataBigArray+2] = 255;
-            skinFilter.data[countDataBigArray+3] = 255;
+            skinFilter.data[pix] = 255;
+            skinFilter.data[pix+1] = 255;
+            skinFilter.data[pix+2] = 255;
+            skinFilter.data[pix+3] = 255;
           }
 
-          countDataBigArray = indexValue * 4;
+          pix = index * 4;
         }
       }
       $rootScope.$broadcast('adaptive.motion:skinData', skinFilter);
