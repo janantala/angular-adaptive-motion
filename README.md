@@ -9,6 +9,7 @@ Check out http://angular-adaptive.github.io/adaptive-motion/demo/
 # Requirements
 
 - AngularJS v 1.0+
+- [getUserMedia Stream](http://caniuse.com/#feat=stream) support
 
 # Usage
 
