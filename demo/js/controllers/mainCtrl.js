@@ -63,6 +63,7 @@ motion.controller('mainCtrl', function mainCtrl($scope, $rootScope, $motion) {
 
   $motion.onError(function(err){
     console.error('onError', err);
+    alert(err);
   });
 
 });
