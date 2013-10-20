@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" ng-app="motion" data-framework="angularjs">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AngularJS • motion</title>
+<link href='http://fonts.googleapis.com/css?family=Titillium+Web:200,300' rel='stylesheet' type='text/css'>
+<style>
+  [ng-cloak] { display: none; }
+  html, body { 
+    font-family: 'Titillium Web', sans-serif; 
+    padding: 0;
+    margin: 0;
+  }
+
+  * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  h1 {
+    
+    font-size: 42px;
+    color: white;
+  }    
+
+  .header, .footer {
+    background: rgb(229,42,58);
+    padding: 10px 0;
+  }
+
+  .container {
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 5px;
+  }
+
+  .content {
+    padding: 20px 0;
+    position: relative;
+    background: white;
+
+    min-height: 500px;
+  }
+
+  .canvas {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    z-index: 100;
+    width: 300px;
+    height: 150px;
+  }
+
+  .white {
+    color: white;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .gestures {
+    text-align: center;
+  }
+
+  .gesture-animation.ng-enter {
+    -webkit-transition: 0.5s linear all;
+    -moz-transition: 0.5s linear all;
+    -o-transition: 0.5s linear all;
+    transition: 0.5s linear all;
+  }
+
+  .gesture-animation.ng-enter {
+    color: red;
+    font-size: 44px;
+  }
+
+  .gesture-animation.ng-enter.ng-enter-active {
+    color: black;
+    font-size: 18px;
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
+  a:hover, a:focus {
+    text-decoration: underline;
+  }
+
+
+</style>
+</head>
+<body ng-controller="mainCtrl">
+    
+    <div class="header">
+      <div class="container">
+        <h1 class="center title">Angular Adaptive Motion</h1>
+
+        <iframe src="http://ghbtns.com/github-btn.html?user=angular-adaptive&repo=adaptive-motion&type=watch&count=true"
+  allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+
+        <iframe src="http://ghbtns.com/github-btn.html?user=angular-adaptive&repo=adaptive-motion&type=fork"
+  allowtransparency="true" frameborder="0" scrolling="0" width="53" height="20"></iframe>
+
+        <iframe src="http://ghbtns.com/github-btn.html?user=janantala&type=follow"
+  allowtransparency="true" frameborder="0" scrolling="0" width="132" height="20"></iframe>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="container">
+        <h4>Visualization:</h4>
+
+        <label><input type="radio" ng-model="visualization" value="video"> video </label>
+        <label><input type="radio" ng-model="visualization" value="skin"> skin </label>
+        <label><input type="radio" ng-model="visualization" value="edge"> edge </label>
+        <label><input type="radio" ng-model="visualization" value="none"> none </label>
+
+        <div ng-switch="visualization">
+          <canvas adaptive-motion="video" ng-switch-when="video" class="canvas"></canvas>
+          <canvas adaptive-motion="skin" ng-switch-when="skin" class="canvas"></canvas>
+          <canvas adaptive-motion="edge" ng-switch-when="edge" class="canvas"></canvas>
+        </div>
+
+        <div class="gestures">
+          <p ng-hide="gestures.length > 0">Waiting for gesture...</p>
+          <p ng-show="gestures.length > 0">Recent gestures:</p>
+          <p ng-repeat="gesture in gestures track by $index" class="gesture-animation">
+            <span ng-show="$index > gestures.length - 6">{{gesture}}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="container">
+
+        <h3 class="white text-center">Usage</h3>
+        
+        <h4 class="white">$motion.start();</h4>
+
+        <h4 class="white">$motion.onStart(cb);</h4>
+
+        <h4 class="white">$motion.onSwipeLeft(cb);</h4>
+
+        <pre>
+$motion.onSwipeLeft(function(data){
+  $scope.$apply(function(){
+      console.log('onSwipeLeft');
+  });
+});
+        </pre>
+  
+        <h4 class="white">$motion.onSwipeRight(cb);</h4>
+
+        <pre>
+$motion.onSwipeRight(function(data){
+  $scope.$apply(function(){
+      console.log('onSwipeRight');
+  });
+});
+        </pre>
+
+        <h4 class="white">$motion.onSwipeUp(cb);</h4>
+
+        <pre>
+$motion.onSwipeUp(function(data){
+  $scope.$apply(function(){
+      console.log('onSwipeUp');
+  });
+});
+        </pre>
+
+        <h4 class="white">$motion.onSwipeDown(cb);</h4>
+
+        <pre>
+$motion.onSwipeDown(function(data){
+  $scope.$apply(function(){
+      console.log('onSwipeDown');
+  });
+});
+        </pre>
+
+        <h4 class="white">$motion.stop();</h4>
+
+        <h4 class="white">$motion.onStop(cb);</h4>
+
+        <h4 class="white">$motion.onError(cb);</h4>
+
+        <p class="text-center">Created by <a href="http://janantala.com">Jan Antala</a></p>
+        <p class="text-center">2013 Licensed under <a href="http://opensource.org/licenses/MIT">MIT</a></p>
+      </div>
+    </div>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular-animate.min.js"></script>
+    <script src="components/angular-adaptive/adaptive-motion/src/adaptive-motion.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers/mainCtrl.js"></script>
+</body>
+</html>
