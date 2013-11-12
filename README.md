@@ -1,4 +1,4 @@
-# adaptive-motion v0.1.0 [![Build Status](https://travis-ci.org/angular-adaptive/adaptive-motion.png?branch=master)](https://travis-ci.org/angular-adaptive/adaptive-motion)
+# adaptive-motion v0.2.0 [![Build Status](https://travis-ci.org/angular-adaptive/adaptive-motion.png?branch=master)](https://travis-ci.org/angular-adaptive/adaptive-motion)
 
 This module allows you to control an AngularJS app using web camera.
 
@@ -25,8 +25,8 @@ To your `bower.json` file. Then run
 
 This will copy the angular-adaptive-motion files into your `bower_components` folder, along with its dependencies. Load the script files in your application:
 
-    <script type="text/javascript" src="components/angular/angular.js"></script>
-    <script type="text/javascript" src="components/angular-adaptive-motion/src/adaptive-motion.js"></script>
+    <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+    <script type="text/javascript" src="bower_components/angular-adaptive-motion/angular-adaptive-motion.js"></script>
 
 Add the **adaptive.motion** module as a dependency to your application module:
 
