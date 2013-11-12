@@ -1,4 +1,4 @@
-/**
+/*!
  * angular-adaptive-motion v0.1.0
  * The MIT License
  * Copyright (c) 2013 Jan Antala http://janantala.com

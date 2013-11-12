@@ -4,7 +4,7 @@ module.exports = function(config) {
     files: [
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'src/adaptive-motion.js',
+      'src/angular-adaptive-motion.js',
       'test/*.spec.js'
     ],
     frameworks: ['jasmine'],
