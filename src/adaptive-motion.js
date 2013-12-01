@@ -7,6 +7,13 @@
 (function () {
 'use strict';
 
+/**
+ * @ngdoc overview
+ * @name adaptive.motion
+ *
+ * @description
+ * The main module which holds everything together.
+ */
 var adaptive = angular.module('adaptive.motion', []);
 
 // RequestAnimationFrame fallback
@@ -74,6 +81,14 @@ var rgb2Hsv = function(r, g, b){
   return [h, s, v];
 };
 
+/**
+ * @ngdoc object
+ * @name adaptive.motion.$motionProvider
+ *
+ * @description
+ * Use the `$motionProvider` to configure `$motion` service. You are able to configure
+ * things like custom treshold options as well as a custom hsv filter.
+ */
 adaptive.provider('$motion', [function() {
 
   var requestId;
@@ -98,14 +113,77 @@ adaptive.provider('$motion', [function() {
     'valmax': 1.0
   };
 
+  /**
+   * @ngdoc function
+   * @name adaptive.motion.$motionProvider#setTreshold
+   * @methodOf adaptive.motion.$motionProvider
+   *
+   * @description
+   * Sets custom treshold options by given options object. The following options are
+   * available:
+   *
+   * - rgb
+   * - move
+   * - bright
+   *
+   * <pre>
+   * var app = angular.module('myApp', ['adaptive.motion']);
+   *
+   * app.config(['$motionProvider', function ($motionProvider) {
+   *   // sets custom treshold options
+   *   $motionProvider.setTreshold({
+   *     'rgb': 150,
+   *     'move': 3,
+   *     'bright': 300
+   *   });
+   * }]);
+   * </pre>
+   *
+   * @param {object} options Options object
+   */
   this.setTreshold = function(treshold) {
     angular.extend(this.treshold, treshold);
   };
 
+  /**
+   * @ngdoc function
+   * @name adaptive.motion.$motionProvider#setHsvFilter
+   * @methodOf adaptive.motion.$motionProvider
+   *
+   * @description
+   * You can use `$motionProvider.setHsvFilter()` to set a custom hsv filter. To
+   * configure such filter you have to set hue, saturation and intensity values. Just
+   * take a look at the following example:
+   *
+   * <pre>
+   * var app = angular.module('myApp', ['adaptive.motion']);
+   *
+   * app.config(['$motionProvider', funciton ($motionProvider) {
+   *   $motionProvider.setHsvFilter({
+   *     'huemin': 0.0,
+   *     'huemax': 0.1,
+   *     'satmin': 0.0,
+   *     'satmax': 1.0,
+   *     'valmin': 0.4,
+   *     'valmax': 1.0
+   *   });
+   * }]);
+   * </pre>
+   *
+   * @param {object} options Options object
+   */
   this.setHsvFilter = function(hsvFilter) {
     angular.extend(this.hsvFilter, hsvFilter);
   };
 
+  /**
+   * @ngdoc object
+   * @name adaptive.motion.$motion
+   * @requires $rootScope
+   *
+   * @description
+   * `$motion` service provides methods to access motion API's.
+   */
   this.$get = function($rootScope) {
 
     var treshold = this.treshold;
@@ -125,6 +203,14 @@ adaptive.provider('$motion', [function() {
       d: 0
     };
 
+    /**
+     * @ngdoc function
+     * @name adaptive.motion.$motion#start
+     * @methodOf adaptive.motion.$motion
+     *
+     * @description
+     * Starts gesture recognition.
+     */
     var start = function(){
 
       window.URL = window.URL || window.webkitURL;
@@ -152,6 +238,14 @@ adaptive.provider('$motion', [function() {
       }
     };
 
+    /**
+     * @ngdoc function
+     * @name adaptive.motion.$motion#stop
+     * @methodOf adaptive.motion.$motion
+     *
+     * @description
+     * Stops gesture recognition.
+     */
     var stop = function(){
       window.cancelAnimationFrame(requestId);
       if (localMediaStream) {
@@ -349,42 +443,98 @@ adaptive.provider('$motion', [function() {
       }
     };
 
+    /**
+     * @ngdoc function
+     * @name adaptive.motion.$motion#onStart
+     * @methodOf adaptive.motion.$motion
+     *
+     * @description
+     * On start callback.
+     */
     var onStart = function(cb){
       $rootScope.$on('adaptive.motion:onStart', function(e, data){
         cb(data);
       });
     };
 
+    /**
+     * @ngdoc function
+     * @name adaptive.motion.$motion#onStop
+     * @methodOf adaptive.motion.$motion
+     *
+     * @description
+     * On stop callback.
+     */
     var onStop = function(cb){
       $rootScope.$on('adaptive.motion:onStop', function(e, data){
         cb(data);
       });
     };
 
+    /**
+     * @ngdoc function
+     * @name adaptive.motion.$motion#onError
+     * @methodOf adaptive.motion.$motion
+     *
+     * @description
+     * On error callback.
+     */
     var onError = function(cb){
       $rootScope.$on('adaptive.motion:onError', function(e, data){
         cb(data);
       });
     };
 
+    /**
+     * @ngdoc function
+     * @name adaptive.motion.$motion#onSwipeLeft
+     * @methodOf adaptive.motion.$motion
+     *
+     * @description
+     * On swipe left gesture.
+     */
     var onSwipeLeft = function(cb){
       $rootScope.$on('adaptive.motion:onSwipeLeft', function(e, data){
         cb(data);
       });
     };
 
+    /**
+     * @ngdoc function
+     * @name adaptive.motion.$motion#onSwipeRight
+     * @methodOf adaptive.motion.$motion
+     *
+     * @description
+     * On swipe right gesture.
+     */
     var onSwipeRight = function(cb){
       $rootScope.$on('adaptive.motion:onSwipeRight', function(e, data){
         cb(data);
       });
     };
 
+    /**
+     * @ngdoc function
+     * @name adaptive.motion.$motion#onSwipeUp
+     * @methodOf adaptive.motion.$motion
+     *
+     * @description
+     * On swipe up gesture.
+     */
     var onSwipeUp = function(cb){
       $rootScope.$on('adaptive.motion:onSwipeUp', function(e, data){
         cb(data);
       });
     };
 
+    /**
+     * @ngdoc function
+     * @name adaptive.motion.$motion#onSwipeDown
+     * @methodOf adaptive.motion.$motion
+     *
+     * @description
+     * On swipe down gesture.
+     */
     var onSwipeDown = function(cb){
       $rootScope.$on('adaptive.motion:onSwipeDown', function(e, data){
         cb(data);
@@ -423,6 +573,30 @@ adaptive.provider('$motion', [function() {
   };
 }]);
 
+/**
+ * @ngdoc directive
+ * @name adaptive.motion.directive:adaptiveMotion
+ * @requires $rootScope
+ * @restrict A
+ *
+ * @description
+ * Use `adaptive-motion` directive to visualize motions on canvas elements.
+ * There are three different visualization types supported.
+ *
+ * - video
+ * - skin
+ * - edge
+ *
+ * @example
+   <example module="ngView">
+     <file name="index.html">
+      <canvas adaptive-motion="video"></canvas>
+     </file>
+     <file name="script.js">
+       angular.module('ngView', ['adaptive.motion']);
+     </file>
+   </example>
+ */
 adaptive.directive('adaptiveMotion', ['$rootScope', function ($rootScope) {
   return {
     restrict: 'A',
