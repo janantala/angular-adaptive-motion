@@ -1,11 +1,20 @@
 {
   "name": "angular-adaptive-motion",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "This module allows you to control an angular app using your body.",
   "author": "https://github.com/angular-adaptive/adaptive-motion/graphs/contributors",
   "license": "MIT",
+  "keywords": [
+    "angular",
+    "adaptive",
+    "motion"
+  ],
   "homepage": "http://angular-adaptive.github.io",
-  "main": "./src/adaptive-motion.js",
+  "main": "./src/angular-adaptive-motion.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular-adaptive/adaptive-motion.git"
+  },
   "ignore": [
     "**/.*",
     "node_modules",
