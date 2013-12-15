@@ -15,9 +15,11 @@ Check out http://angular-adaptive.github.io/adaptive-motion/demo/
 
 We use [bower](http://twitter.github.com/bower/) for dependency management. Add
 
-    dependencies: {
-        "angular-adaptive-motion": "latest"
-    }
+```json
+dependencies: {
+    "angular-adaptive-motion": "latest"
+}
+```
 
 To your `bower.json` file. Then run
 
@@ -25,18 +27,24 @@ To your `bower.json` file. Then run
 
 This will copy the angular-adaptive-motion files into your `bower_components` folder, along with its dependencies. Load the script files in your application:
 
-    <script type="text/javascript" src="bower_components/angular/angular.js"></script>
-    <script type="text/javascript" src="bower_components/angular-adaptive-motion/angular-adaptive-motion.js"></script>
+```html
+<script type="text/javascript" src="bower_components/angular/angular.js"></script>
+<script type="text/javascript" src="bower_components/angular-adaptive-motion/angular-adaptive-motion.js"></script>
+```
 
 Add the **adaptive.motion** module as a dependency to your application module:
 
-    var myAppModule = angular.module('MyApp', ['adaptive.motion']);
+```js
+var myAppModule = angular.module('MyApp', ['adaptive.motion']);
+```
 
 and include `$motion` service as a dependency to your controller:
 
-    angular.module('MyApp').controller('MainCtrl', function ['$scope', '$motion', ($scope, $motion) {
+```js
+angular.module('MyApp').controller('MainCtrl', function ['$scope', '$motion', ($scope, $motion) {
 
-    }]);
+}]);
+```
 
 ### Public methods
 
@@ -57,7 +65,7 @@ On error callback.
 
 #### $motion.onSwipeLeft(cb);
 On swipe left gesture.
-```
+```js
 $motion.onSwipeLeft(function(data){
     $scope.$apply(function(){
         console.log('onSwipeLeft');
@@ -67,7 +75,7 @@ $motion.onSwipeLeft(function(data){
 
 #### $motion.onSwipeRight(cb);
 On swipe right gesture.
-```
+```js
 $motion.onSwipeRight(function(data){
     $scope.$apply(function(){
         console.log('onSwipeRight');
@@ -77,7 +85,7 @@ $motion.onSwipeRight(function(data){
 
 #### $motion.onSwipeUp(cb);
 On swipe up gesture.
-```
+```js
 $motion.onSwipeUp(function(data){
     $scope.$apply(function(){
         console.log('onSwipeUp');
@@ -87,7 +95,7 @@ $motion.onSwipeUp(function(data){
 
 #### $motion.onSwipeDown(cb);
 On swipe down gesture.
-```
+```js
 $motion.onSwipeDown(function(data){
     $scope.$apply(function(){
         console.log('onSwipeDown');
@@ -100,7 +108,7 @@ $motion.onSwipeDown(function(data){
 
 You can configure `$motionProvider` to a custom treshold options in app configuration.
 
-```
+```js
 $motionProvider.setTreshold({
     'rgb': 150,
     'move': 3,
@@ -110,7 +118,7 @@ $motionProvider.setTreshold({
 
 You can also set custom hsv filter.
 
-```
+```js
 $motionProvider.setHsvFilter({
     'huemin': 0.0,
     'huemax': 0.1,
@@ -129,7 +137,7 @@ You can choose from following styles:
 
 #### Video
 
-```
+```html
 <canvas adaptive-motion="video"></canvas>
 ```
 
@@ -137,7 +145,7 @@ You can choose from following styles:
 
 #### Skin
 
-```
+```html
 <canvas adaptive-motion="skin"></canvas>
 ```
 
@@ -145,7 +153,7 @@ You can choose from following styles:
 
 #### Edge
 
-```
+```html
 <canvas adaptive-motion="edge"></canvas>
 ```
 
