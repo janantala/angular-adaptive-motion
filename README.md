@@ -1,3 +1,7 @@
+# This repository is deprecated!
+
+---
+
 # adaptive-motion v0.2.0 [![Build Status](https://travis-ci.org/angular-adaptive/adaptive-motion.png?branch=master)](https://travis-ci.org/angular-adaptive/adaptive-motion)
 
 This module allows you to control an AngularJS app using web camera.
